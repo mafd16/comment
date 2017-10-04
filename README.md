@@ -32,3 +32,17 @@ This software carries a MIT license.
  .  
 ..:  Copyright (c) 2017 Martin Fagerlund (mngfagerlund@gmail.com)
 ```
+
+
+For db:
+
+cp -r vendor/anax/database/data/ data/
+chmod 777 data
+sqlite3 data/db.sqlite
+(quit sqlite3 with .exit)
+sqlite3 data/db.sqlite < vendor/mafd16/comment/sql/ddl/comments_sqlite.sql
+chmod 666 data/db.sqlite
+sqlite3 data/db.sqlite < vendor/mafd16/comment/sql/ddl/user_sqlite.sql
+
+
+cp -r vendor/mafd16/comment/src/* src/
