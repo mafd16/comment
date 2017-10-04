@@ -25,7 +25,7 @@ return [
         "userController" => [
             "shared" => true,
             "callback" => function () {
-                $obj = new \Anax\User\UserController();
+                $obj = new \Mafd16\User\UserController();
                 $obj->setDI($this);
                 return $obj;
             }

@@ -1,6 +1,7 @@
 <?php
 
-namespace Anax\User;
+namespace Mafd16\User;
+//namespace Anax\User;
 
 use \Anax\Database\ActiveRecordModel;
 
