@@ -1,7 +1,6 @@
 <?php
 
 namespace Mafd16\User;
-//namespace Anax\User;
 
 use \Anax\Configure\ConfigureInterface;
 use \Anax\Configure\ConfigureTrait;

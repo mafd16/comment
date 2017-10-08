@@ -208,7 +208,7 @@ phpmd: prepare
 .PHONY: phploc
 phploc: prepare
 	@$(call HELPTEXT,$@)
-	$(PHPLOC) src > build/phploc
+	$(PHPLOC) vendor/mafd16/comment/src > build/phploc
 
 
 

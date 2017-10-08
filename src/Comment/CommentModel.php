@@ -60,10 +60,6 @@ class CommentModel implements
      */
     public function getComments()
     {
-        // Using session as storage:
-        //$data = $this->session->get($key);
-        //return $data;
-
         // Using db as storage:
         // Get users from db
         $com = new Comments();
@@ -84,19 +80,6 @@ class CommentModel implements
      */
     public function getComment($id)
     {
-        // Using session
-        // Get all comments
-        //$comments = $this->getComments($key);
-        // Get comment with id $id
-        //$comment = null;
-        //foreach ($comments as $key => $val) {
-        //    if ($id == $val["id"]) {
-        //        $comment = $val;
-        //        break;
-        //    }
-        //}
-        //return $comment;
-
         // Using db
         $comments = $this->getComments();
         // Get comment with id $id
@@ -132,28 +115,6 @@ class CommentModel implements
         $com->comment = $post["comment"];
 
         $com->save();
-
-        // Using session
-        //$item = array("user_id"=>$post["id"], "name"=>$post["name"], "email"=>$post["email"], "comment"=>$post["comment"]);
-        //$key = $post["article"];
-
-        //if ($this->app->session->has($key)) {
-        //if ($this->session->has($key)) {
-            //$dataset = $this->session->get($key);
-            // Get max value for the id
-            //$max = 0;
-            //foreach ($dataset as $val) {
-            //    if ($max < $val["id"]) {
-            //        $max = $val["id"];
-            //    }
-            //}
-            //$item["id"] = $max + 1;
-            //$dataset[] = $item;
-        //} else {
-        //    $item["id"] = 1;
-        //    $dataset = array($item);
-        //};
-        //$this->session->set($key, $dataset);
     }
 
 
@@ -177,19 +138,6 @@ class CommentModel implements
         $com->comment = $comment["comment"];
         // Save
         $com->save();
-
-        // Using session
-        // Get all the comments
-        //$comments = $this->getComments($comKey);
-        // Replace old comment with new
-        //foreach ($comments as $key => $value) {
-        //    if ($value["id"] == $id) {
-        //        $comments[$key] = $comment;
-        //        break;
-        //    }
-        //}
-        // Update session
-        //$this->session->set($comKey, $comments);
     }
 
 
@@ -212,34 +160,5 @@ class CommentModel implements
         $com->deleted = date("Y-m-d H:i:s");
         // Save
         $com->save();
-
-
-        // Using session
-        //$dataset = $this->getComments($keyDataset);
-        // Find the comment if it exists
-        //foreach ($dataset as $key => $val) {
-        //    if ($id == $val["id"]) {
-        //        unset($dataset[$key]);
-        //        break;
-        //    }
-        //}
-        //$this->app->session->set($keyDataset, $dataset);
-        //$this->session->set($keyDataset, $dataset);
     }
-
-
-
-    /**
-     * Save (the modified) comment dataset.
-     *
-     * @param string $key     for the dataset.
-     * @param string $dataset the data to save.
-     *
-     * @return self
-     */
-    //public function saveComments($dataset)
-    //{
-        //$this->session->set($key, $dataset);
-        //return $this;
-    //}
 }
