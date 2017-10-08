@@ -10,7 +10,7 @@
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">vendor/mafd16/comment/src</directory>
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
 
