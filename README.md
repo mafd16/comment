@@ -2,7 +2,10 @@ Mafd16 comment
 ==================================
 
 [![Latest Stable Version](https://poser.pugx.org/mafd16/comment/v/stable)](https://packagist.org/packages/mafd16/comment)
-[![Build Status](https://travis-ci.org/mafd16/comment.svg?branch=master)](https://travis-ci.org/mafd16/comment)
+[![Build Status](https://travis-ci.org/mafd16/comment.svg?branch=master)](https://travis-ci.org/mafd16/comment.svg?branch=master)
+
+
+
 [![CircleCI](https://circleci.com/gh/mafd16/comment.svg?style=svg)](https://circleci.com/gh/mafd16/comment)
 [![Build Status](https://scrutinizer-ci.com/g/mafd16/comment/badges/build.png?b=master)](https://scrutinizer-ci.com/g/mafd16/comment/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mafd16/comment/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mafd16/comment/?branch=master)
