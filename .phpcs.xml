@@ -4,7 +4,6 @@
 
     <file>src</file>
     <file>test</file>
-    <file>vendor/mafd16/comment/src</file>
 
     <exclude-pattern>*.tpl.*</exclude-pattern>
     <exclude-pattern>test/config.php</exclude-pattern>
