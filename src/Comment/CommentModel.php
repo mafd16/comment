@@ -151,6 +151,8 @@ class CommentModel implements
      */
     public function deleteComment($id)
     {
+        // Set default timezone
+        date_default_timezone_set('Europe/Stockholm');
         // Connect to db
         $com = new Comments();
         $com->setDb($this->di->get("db"));
