@@ -2,7 +2,6 @@
 
 namespace Mafd16\Comment;
 
-//use \Anax\Common\AppInjectableTrait;
 use \Anax\Configure\ConfigureInterface;
 use \Anax\Configure\ConfigureTrait;
 use \Anax\DI\InjectionAwareInterface;
@@ -42,7 +41,7 @@ class CommentModel implements
      */
     public function inject($dependency)
     {
-        $this->session = $dependency;//["session"];
+        $this->session = $dependency;
         return $this;
     }
 

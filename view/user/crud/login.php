@@ -5,20 +5,6 @@ namespace Anax\View;
 /**
  * View to display user login.
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo "<br>";
-//echo showEnvironment(get_defined_vars());
-//print_r($_SESSION);
-
-// Create urls for navigation
-//$urlToCreate = url("book/create");
-//$urlToDelete = url("book/delete");
-
-//$di->get("session")->destroy();
-//print_r($data);
-
-//$di->get("session")->destroy();
 
 ?>
 <section class="section">

@@ -1,16 +1,4 @@
 <?php
-//print_r($app->session->get("commentsystem"));
-// remove all session variables
-//session_unset();
-//print_r($_SESSION);
-//print_r($data);
-// Get existing comments from controller
-//$comments = $app->comController->getComments("comPage");
-//print_r($data["templateData"]);// = $data["comments"];
-
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
-
 
 // This is the admin page!!!
 // If not admin, redirect!
@@ -21,10 +9,6 @@ if (!$di->get("session")->get("my_user_admin")) {
 // Gather incoming variables and use default values if not set
 $users = isset($users) ? $users : null;
 
-
-//print_r($users);
-//echo "<br>";
-//var_dump($users);
 
 ?>
 

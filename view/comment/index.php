@@ -1,17 +1,4 @@
 <?php
-//print_r($app->session->get("commentsystem"));
-// remove all session variables
-//session_unset();
-//print_r($_SESSION);
-//print_r($data);
-//print_r($comments);
-//var_dump($comments);
-// Get existing comments from controller
-//$comments = $app->comController->getComments("comPage");
-//print_r($data["templateData"]);// = $data["comments"];
-
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
 
 // Gather incoming variables and use default values if not set
 $comments = isset($comments) ? $comments : null;
@@ -49,7 +36,6 @@ $comments = isset($comments) ? $comments : null;
     <?php if (!$comment->deleted) : ?>
         <!-- Code for the Gravatar:-->
         <?php
-            //$gravatarhash = md5(strtolower(trim($comment["email"])));
             $gravatarhash = md5(strtolower(trim($comment->UserEmail)));
         ?>
 

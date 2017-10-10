@@ -5,21 +5,6 @@ namespace Anax\View;
 /**
  * View to display user profile.
  */
-// Show all incoming variables/functions
-//var_dump(get_defined_functions());
-//echo showEnvironment(get_defined_vars());
-
-//print_r($_SESSION);
-//echo "<br>";
-
-//var_dump($user);
-//var_dump($data);
-// Create urls for navigation
-//$urlToCreate = url("book/create");
-//$urlToDelete = url("book/delete");
-
-//$di->get("session")->destroy();
-//print_r($user);
 
 // If not logged in, redirect!
 if (!$di->get("session")->has("my_user_id")) {

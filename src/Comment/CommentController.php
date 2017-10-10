@@ -2,8 +2,6 @@
 
 namespace Mafd16\Comment;
 
-//use \Anax\Common\AppInjectableInterface;
-//use \Anax\Common\AppInjectableTrait;
 use \Anax\DI\InjectionAwareInterface;
 use \Anax\DI\InjectionAwareTrait;
 
@@ -16,7 +14,6 @@ use \Anax\DI\InjectionAwareTrait;
 class CommentController implements InjectionAwareInterface
 {
     use InjectionAwareTrait;
-    //use AppInjectableTrait;
 
 
     /**
@@ -24,7 +21,6 @@ class CommentController implements InjectionAwareInterface
      *
      * @return void
      */
-    //public function getComments($key)
     public function getComments()
     {
         $key = "comPage";
