@@ -18,7 +18,6 @@ class CommentModel implements
 {
     use ConfigureTrait,
         InjectionAwareTrait;
-    //use AppInjectableTrait;
 
     /**
      * @var array $session inject a reference to the session.
@@ -84,7 +83,6 @@ class CommentModel implements
         $comments = $this->getComments();
         // Get comment with id $id
         $comment = null;
-        //foreach ($comments as $key => $val) {
         foreach ($comments as $val) {
             if ($id == $val->id) {
                 $comment = $val;
@@ -121,7 +119,6 @@ class CommentModel implements
     /**
      * Update old comment with new comment
      *
-     * @param string    $comKey     for the dataset
      * @param int       $id         id for comment
      * @param array     $comment    the comment-array (name, email, comment, id)
      *
@@ -144,7 +141,6 @@ class CommentModel implements
     /**
      * Delete comment with key and id
      *
-     * @param string $keyDataset    for the dataset
      * @param int    $id            to delete
      *
      * @return void

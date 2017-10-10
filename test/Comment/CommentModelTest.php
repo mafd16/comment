@@ -22,7 +22,6 @@ class CommentModelTest extends TestCase
      */
     public function setUp()
     {
-        //$this->di = new DIFactoryDefault();
         $this->di  = new \Anax\DI\DIFactoryConfig("../test/diTest.php");
 
         $this->commod = new CommentModel();
@@ -41,7 +40,6 @@ class CommentModelTest extends TestCase
      */
     public function testCreate()
     {
-        //$commod = new CommentModel();
         $this->assertInstanceOf("Mafd16\Comment\CommentModel", $this->commod);
     }
 

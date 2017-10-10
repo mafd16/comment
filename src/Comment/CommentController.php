@@ -117,7 +117,6 @@ class CommentController implements InjectionAwareInterface
     /**
      * Update old comment with new comment
      *
-     * @param string    $key        for the dataset
      * @param int       $id         id for comment
      * @param array     $comment    the comment-array (name, email, comment, id)
      *

@@ -7,7 +7,7 @@ Mafd16 comment
 [![Build Status](https://scrutinizer-ci.com/g/mafd16/comment/badges/build.png?b=master)](https://scrutinizer-ci.com/g/mafd16/comment/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mafd16/comment/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mafd16/comment/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/mafd16/comment/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/mafd16/comment/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d831fd4c-b7c6-4ff0-9a83-102440af8929/mini.png)](https://insight.sensiolabs.com/projects/d831fd4c-b7c6-4ff0-9a83-102440af8929)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/2b8f277b-aef2-4e44-b1b3-c2ad897a7b7c/mini.png)](https://insight.sensiolabs.com/projects/2b8f277b-aef2-4e44-b1b3-c2ad897a7b7c)
 
 Mafd16 comment module.
 

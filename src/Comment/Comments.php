@@ -1,6 +1,5 @@
 <?php
 
-//namespace Anax\Comments;
 namespace Mafd16\Comment;
 
 use \Anax\Database\ActiveRecordModel;

@@ -70,7 +70,6 @@ class UserController implements
         $pageRender = $this->di->get("pageRender");
 
         $data = [
-            //"content" => $form->getHTML(),
             "message" => "",
         ];
 
@@ -96,12 +95,9 @@ class UserController implements
         $title      = "A create user page";
         $view       = $this->di->get("view");
         $pageRender = $this->di->get("pageRender");
-        //$form       = new CreateUserForm($this->di);
 
-        //$form->check();
 
         $data = [
-            //"content" => $form->getHTML(),
             "message" => $message,
         ];
 
@@ -123,9 +119,6 @@ class UserController implements
      */
     public function postCreatingUser()
     {
-        //$title      = "A create user page";
-        //$view       = $this->di->get("view");
-        //$pageRender = $this->di->get("pageRender");
         $request    = $this->di->get("request");
         $session    = $this->di->get("session");
 
@@ -156,7 +149,6 @@ class UserController implements
         $session->set("my_user_name", $user->acronym);
         $session->set("my_user_email", $user->email);
         $session->set("my_user_admin", $user->admin);
-        //$session->set("who", $user);
         // Redirect back to profile
         $this->di->get("response")->redirect("user/profile");
     }
@@ -182,12 +174,10 @@ class UserController implements
         $user = new User();
         $user->setDb($this->di->get("db"));
         $id = $session->get("my_user_id");
-        //$id = $my_user->id;
         $user->find("id", $id);
 
         $data = [
             "user" => $user,
-            //"content" => $form->getHTML(),
         ];
 
         $view->add("user/crud/profile", $data);
@@ -212,7 +202,6 @@ class UserController implements
         $request    = $this->di->get("request");
         $session    = $this->di->get("session");
 
-        //$session->set("test", "testing");
         // Connect to database
         $user = new User();
         $user->setDb($this->di->get("db"));
@@ -240,12 +229,9 @@ class UserController implements
             $session->set("my_user_name", $user->acronym);
             $session->set("my_user_email", $user->email);
             $session->set("my_user_admin", $user->admin);
-            //$session->set("who", $user);
-            //$session->set("user", $user);
             $this->di->get("response")->redirect("user/profile");
         } else {
             // if false goto login
-            //$this->di->get("response")->redirect("user/login");
             $title = "A login page";
             $data = [
                 "acronym" => $acronym,
@@ -280,13 +266,9 @@ class UserController implements
         $user->setDb($this->di->get("db"));
         $id = $this->di->get("session")->get("my_user_id");
         $user->find("id", $id);
-
-        //$user = $session->get("my_user");
-
         $data = [
             "user" => $user,
             "message" => $message,
-            //"content" => $form->getHTML(),
         ];
 
         $view->add("user/crud/update", $data);
@@ -306,9 +288,6 @@ class UserController implements
      */
     public function updatePostUserProfile()
     {
-        //$title      = "Updating user";
-        //$view       = $this->di->get("view");
-        //$pageRender = $this->di->get("pageRender");
         $request    = $this->di->get("request");
         $session    = $this->di->get("session");
 
@@ -333,7 +312,6 @@ class UserController implements
         if (!empty($password)) {
             $user->setPassword($password);
         }
-        //$user->acronym = $session->get("user")
         // Save to database
         $user->save();
         // Save to session
@@ -416,7 +394,6 @@ class UserController implements
 
         // Get user id from GET variable
         $userId = isset($userId) ? $userId : $this->di->get("request")->getGet("id");
-        //$userId = $this->di->get("request")->getGet("id");
 
         // Get user from db
         $user = new User();
@@ -446,11 +423,7 @@ class UserController implements
      */
     public function postAdminUpdateUser()
     {
-        //$title      = "Admin updating user";
-        //$view       = $this->di->get("view");
-        //$pageRender = $this->di->get("pageRender");
         $request    = $this->di->get("request");
-        //$session    = $this->di->get("session");
 
         // Get POST-variables
         $email = $request->getPost("email");
@@ -465,7 +438,6 @@ class UserController implements
         }
 
         // Get user id from session
-        //$id = $session->get("my_user_id");
         // Get user from db
         $user = new User();
         $user->setDb($this->di->get("db"));
@@ -476,7 +448,6 @@ class UserController implements
         if (!empty($password)) {
             $user->setPassword($password);
         }
-        //$user->acronym = $session->get("user")
         // Save to database
         $user->save();
 
@@ -500,12 +471,8 @@ class UserController implements
         $title      = "Admin create user page";
         $view       = $this->di->get("view");
         $pageRender = $this->di->get("pageRender");
-        //$form       = new CreateUserForm($this->di);
-
-        //$form->check();
 
         $data = [
-            //"content" => $form->getHTML(),
             "message" => $message,
         ];
 
@@ -527,11 +494,7 @@ class UserController implements
      */
     public function postAdminCreateUser()
     {
-        //$title      = "Admin create user page";
-        //$view       = $this->di->get("view");
-        //$pageRender = $this->di->get("pageRender");
         $request    = $this->di->get("request");
-        //$session    = $this->di->get("session");
 
         // Get POST-variables
         $acronym = $request->getPost("name");
@@ -574,10 +537,6 @@ class UserController implements
      */
     public function getAdminDeleteUser()
     {
-        //$title      = "Delete user";
-        //$view       = $this->di->get("view");
-        //$pageRender = $this->di->get("pageRender");
-
         // Get user to delete from GET variable
         $userToDelete = $this->di->get("request")->getGet("id");
 
@@ -586,7 +545,6 @@ class UserController implements
         $user->setDb($this->di->get("db"));
         $user->find("id", $userToDelete);
         // Delete user (Set Deleted to timestamp)
-        //$user->delete($userToDelete);
         $user->deleted = date("Y-m-d H:i:s");
         $user->save();
 
