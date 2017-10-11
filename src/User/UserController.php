@@ -145,7 +145,7 @@ class UserController implements
         // Save to database
         $user->save();
         */
-        $newUser = [
+        $newUser = (object) [
             "acronym" => $acronym,
             "password" => $password,
             "email" => $email,
