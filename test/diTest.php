@@ -69,7 +69,8 @@ return [
             "shared" => true,
             "callback" => function () {
                 $obj = new \Anax\Session\SessionConfigurable();
-                $obj->configure("session.php");
+                //$obj->configure("session.php");
+                $obj->configure(["name" => preg_replace("/[^a-z\d]/i", "", ANAX_APP_PATH)]);
                 $obj->start();
                 return $obj;
             }

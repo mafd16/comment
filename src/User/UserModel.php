@@ -27,9 +27,9 @@ class UserModel implements
      * Create a new User.
      * The acronym is unique!
      *
-     * @param array $newUser the values of the new user.
+     * @param object $newUser the values of the new user.
      *
-     * $newUser = [
+     * $newUser = (object) [
      *      acronym => name,
      *      password => hashing in function!,
      *      email => ,
@@ -40,7 +40,7 @@ class UserModel implements
      *      admin => 0,
      *  ];
      *
-     * @return boolean true if acronym unique, false otherwise.
+     * @return object $user if acronym unique, false otherwise.
      */
     public function createUser($newUser)
     {
@@ -63,7 +63,59 @@ class UserModel implements
             $user->admin = 0;
             // Save to database
             $user->save();
-            return true;
+            return $user;
         }
+    }
+
+
+    /**
+     * Save a user to session.
+     *
+     * @param object $user the values of the user.
+     *
+     * $user = (object) [
+     *      acronym => name,
+     *      password => hashed,
+     *      email => email,
+     *      created => timestamp,
+     *      updated => null/timestamp,
+     *      deleted => null/timestamp,
+     *      active => null/timestamp,
+     *      admin => 0/1,
+     *  ];
+     *
+     * @return void
+     */
+    public function saveToSession($user)
+    {
+        $session = $this->di->get("session");
+        // Save user to session
+        $session->set("my_user_id", $user->id);
+        $session->set("my_user_name", $user->acronym);
+        //$session->set("my_user_password", $user->password);
+        $session->set("my_user_email", $user->email);
+        //$session->set("my_user_created", $user->created);
+        //$session->set("my_user_updated", $user->updated);
+        //$session->set("my_user_deleted", $user->deleted);
+        //$session->set("my_user_active", $user->active);
+        $session->set("my_user_admin", $user->admin);
+    }
+
+
+    /**
+     * Get a user from the database
+     *
+     * @param int $id the id of the user
+     *
+     * @return object $user the user object
+     */
+    public function getUserFromDatabase($id)
+    {
+        // Connect to db
+        $user = new User();
+        $user->setDb($this->di->get("db"));
+        // Get the user
+        $user->find("id", $id);
+        return $user;
     }
 }

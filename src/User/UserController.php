@@ -151,20 +151,21 @@ class UserController implements
             "email" => $email,
         ];
 
-        $isCreated = $this->di->get("user")->createUser($newUser);
+        $createdUser = $this->di->get("user")->createUser($newUser);
 
-        if (!$isCreated) {
+        if (!$createdUser) {
             $message = "<p>User " . $acronym . " already exists!</p>";
             $this->getCreateUser($message);
             return;
         }
 
-
         // Save user to session
-        $session->set("my_user_id", $user->id);
-        $session->set("my_user_name", $user->acronym);
-        $session->set("my_user_email", $user->email);
-        $session->set("my_user_admin", $user->admin);
+        //$session->set("my_user_id", $createdUser->id);
+        //$session->set("my_user_name", $createdUser->acronym);
+        //$session->set("my_user_email", $createdUser->email);
+        //$session->set("my_user_admin", $createdUser->admin);
+        $this->di->get("user")->saveToSession($createdUser);
+
         // Redirect back to profile
         $this->di->get("response")->redirect("user/profile");
     }
@@ -187,10 +188,12 @@ class UserController implements
         $pageRender = $this->di->get("pageRender");
         $session    = $this->di->get("session");
         // Get user from db
-        $user = new User();
+        /*$user = new User();
         $user->setDb($this->di->get("db"));
         $id = $session->get("my_user_id");
-        $user->find("id", $id);
+        $user->find("id", $id);*/
+        $id = $session->get("my_user_id");
+        $user = $this->di->get("user")->getUserFromDatabase($id);
 
         $data = [
             "user" => $user,
