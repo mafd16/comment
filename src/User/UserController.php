@@ -133,7 +133,7 @@ class UserController implements
             $this->getCreateUser($message);
             return;
         }
-
+        /*
         // Get user from db
         $user = new User();
         $user->setDb($this->di->get("db"));
@@ -144,6 +144,22 @@ class UserController implements
         $user->admin = 0;
         // Save to database
         $user->save();
+        */
+        $newUser = [
+            "acronym" => $acronym,
+            "password" => $password,
+            "email" => $email,
+        ];
+
+        $isCreated = $this->di->get("user")->createUser($newUser);
+
+        if (!$isCreated) {
+            $message = "<p>User " . $acronym . " already exists!</p>";
+            $this->getCreateUser($message);
+            return;
+        }
+
+
         // Save user to session
         $session->set("my_user_id", $user->id);
         $session->set("my_user_name", $user->acronym);
@@ -547,6 +563,7 @@ class UserController implements
         // Delete user (Set Deleted to timestamp)
         $user->deleted = date("Y-m-d H:i:s");
         $user->save();
+        //$this->di->get("user")->deleteUser($id);
 
         // Redirect back to admin
         $this->di->get("response")->redirect("user/admin");

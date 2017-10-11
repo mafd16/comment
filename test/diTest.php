@@ -33,7 +33,8 @@ return [
                 $obj->setStaticSiteUrl($request->getSiteUrl());
                 $obj->setStaticBaseUrl($request->getBaseUrl());
                 $obj->setScriptName($request->getScriptName());
-                $obj->configure("url.php");
+                //$obj->configure("url.php");
+                $obj->configure(["urlType" => \Anax\Url\Url::URL_CLEAN]);
                 $obj->setDefaultsFromConfiguration();
                 return $obj;
             }
@@ -123,6 +124,14 @@ return [
                 $comController = new \Mafd16\Comment\CommentController();
                 $comController->setDI($this);
                 return $comController;
+            }
+        ],
+        "user" => [
+            "shared" => true,
+            "callback" => function () {
+                $obj = new \Mafd16\User\UserModel();
+                $obj->setDI($this);
+                return $obj;
             }
         ],
         "userController" => [

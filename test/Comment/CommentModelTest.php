@@ -22,7 +22,7 @@ class CommentModelTest extends TestCase
      */
     public function setUp()
     {
-        $this->di  = new \Anax\DI\DIFactoryConfig("../test/diTest.php");
+        $this->di = new \Anax\DI\DIFactoryConfig("../test/diTest.php");
 
         $this->commod = new CommentModel();
         $this->commod->setDI($this->di);
