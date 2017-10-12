@@ -92,9 +92,99 @@ class UserModelTest extends TestCase
      */
     public function testGetUserFromDatabase()
     {
+        // Add user to db
+        $newUser = (object) [
+            "acronym" => "charles",
+            "password" => "darwin",
+            "email" => "charles@darwin",
+        ];
+        $this->di->get("user")->createUser($newUser);
+
         $user = $this->di->get("user")->getUserFromDatabase(1);
         $this->assertEquals("charles", $user->acronym);
         $this->assertEquals("charles@darwin", $user->email);
         $this->assertNotEquals("darwin", $user->password);
+    }
+
+
+    /**
+     * Test update user in database.
+     */
+    public function testUpdateUserInDatabase()
+    {
+        // Add user to db
+        $newUser = (object) [
+            "acronym" => "charles",
+            "password" => "darwin",
+            "email" => "charles@darwin",
+            "admin" => 1,
+        ];
+        $this->di->get("user")->createUser($newUser);
+        // Update user
+        $update = (object) [
+            "password" => "darwinist",
+            "email" => "charles@darwin.net",
+            "admin" => 0,
+        ];
+        $user = $this->di->get("user")->updateUserInDatabase(1, $update);
+        $this->assertEquals("charles@darwin.net", $user->email);
+        $this->assertNotNull($user->updated);
+        $this->assertTrue($user->verifyPassword("charles", "darwinist"));
+        $this->assertEquals(0, $user->admin);
+    }
+
+
+    /**
+     * Test logout user from session.
+     */
+    public function testLogoutUser()
+    {
+        // Create user
+        $user = (object) [
+            "id" => 1,
+            "acronym" => "Kalle Anka",
+            "email" => "kalle@ankeborg",
+            "admin" => 1,
+        ];
+        // login user
+        $this->di->get("user")->saveToSession($user);
+        // Check user is logged in
+        $this->assertEquals("Kalle Anka", $this->di->get("session")->get("my_user_name"));
+        $this->assertEquals(1, $this->di->get("session")->get("my_user_id"));
+        $this->assertEquals("kalle@ankeborg", $this->di->get("session")->get("my_user_email"));
+        $this->assertEquals(1, $this->di->get("session")->get("my_user_admin"));
+
+        // Logout user
+        $this->di->get("user")->logoutUser();
+
+        $this->assertNull($this->di->get("session")->get("my_user_name"));
+        $this->assertNull($this->di->get("session")->get("my_user_id"));
+        $this->assertNull($this->di->get("session")->get("my_user_email"));
+        $this->assertNull($this->di->get("session")->get("my_user_admin"));
+    }
+
+
+    /**
+     * Test delete user from db.
+     * (We are actually only setting $user->deleted to timestamp)
+     */
+    public function testDeleteUser()
+    {
+        // Add user to db
+        $newUser = (object) [
+            "acronym" => "knatte",
+            "password" => "fnatte",
+            "email" => "tjatte",
+            "admin" => 0,
+        ];
+        $this->di->get("user")->createUser($newUser);
+        // Check that user is not already deleted
+        $user = $this->di->get("user")->getUserFromDatabase(1);
+        $this->assertNull($user->deleted);
+        $this->assertEquals("knatte", $user->acronym);
+        // Delete user
+        $user = $this->di->get("user")->deleteUser($user->id);
+        // Check that user is deleted
+        $this->assertNotNull($user->deleted);
     }
 }

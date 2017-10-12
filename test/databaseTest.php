@@ -13,7 +13,8 @@
  *
  */
 return [
-    "dsn"             => "sqlite:" . ANAX_INSTALL_PATH . "/test/data/db.sqlite",
+    //"dsn"             => "sqlite:" . ANAX_INSTALL_PATH . "/test/data/db.sqlite",
+    "dsn"             => "sqlite::memory:",
     "username"        => null,
     "password"        => null,
     "driver_options"  => null,
@@ -25,5 +26,5 @@ return [
     "verbose"         => null,
 
     // True to be verbose on connection failed
-    "debug_connect"   => false,
+    "debug_connect"   => true,//false,
 ];

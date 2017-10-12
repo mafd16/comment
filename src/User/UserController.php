@@ -120,7 +120,7 @@ class UserController implements
     public function postCreatingUser()
     {
         $request    = $this->di->get("request");
-        $session    = $this->di->get("session");
+        //$session    = $this->di->get("session");
 
         // Get POST-variables
         $acronym = $request->getPost("name");
@@ -281,10 +281,12 @@ class UserController implements
         $pageRender = $this->di->get("pageRender");
 
         // Get user from db
-        $user = new User();
-        $user->setDb($this->di->get("db"));
+        //$user = new User();
+        //$user->setDb($this->di->get("db"));
         $id = $this->di->get("session")->get("my_user_id");
-        $user->find("id", $id);
+        //$user->find("id", $id);
+        $user = $this->di->get("user")->getUserFromDatabase($id);
+
         $data = [
             "user" => $user,
             "message" => $message,
@@ -323,7 +325,7 @@ class UserController implements
         // Get user id from session
         $id = $session->get("my_user_id");
         // Get user from db
-        $user = new User();
+        /*$user = new User();
         $user->setDb($this->di->get("db"));
         $user->find("id", $id);
         // Update $user:
@@ -332,12 +334,20 @@ class UserController implements
             $user->setPassword($password);
         }
         // Save to database
-        $user->save();
+        $user->save();*/
+        $update = (object) [
+            "password" => $password,
+            "email" => $email,
+        ];
+        $user = $this->di->get("user")->updateUserInDatabase($id, $update);
+
         // Save to session
-        $session->set("my_user_id", $user->id);
+        /*$session->set("my_user_id", $user->id);
         $session->set("my_user_name", $user->acronym);
         $session->set("my_user_email", $user->email);
-        $session->set("my_user_admin", $user->admin);
+        $session->set("my_user_admin", $user->admin);*/
+        $this->di->get("user")->saveToSession($user);
+
         // Redirect back to profile
         $this->di->get("response")->redirect("user/profile");
     }
@@ -356,10 +366,11 @@ class UserController implements
     public function getLogout()
     {
         // Unset session-key user
-        $this->di->get("session")->delete("my_user_id");
-        $this->di->get("session")->delete("my_user_name");
-        $this->di->get("session")->delete("my_user_email");
-        $this->di->get("session")->delete("my_user_admin");
+        //$this->di->get("session")->delete("my_user_id");
+        //$this->di->get("session")->delete("my_user_name");
+        //$this->di->get("session")->delete("my_user_email");
+        //$this->di->get("session")->delete("my_user_admin");
+        $this->di->get("user")->logoutUser();
         // Redirect back to login
         $this->di->get("response")->redirect("user/login");
     }
@@ -415,9 +426,10 @@ class UserController implements
         $userId = isset($userId) ? $userId : $this->di->get("request")->getGet("id");
 
         // Get user from db
-        $user = new User();
-        $user->setDb($this->di->get("db"));
-        $user->find("id", $userId);
+        //$user = new User();
+        //$user->setDb($this->di->get("db"));
+        //$user->find("id", $userId);
+        $user = $this->di->get("user")->getUserFromDatabase($userId);
 
         $data = [
             "user" => $user,
@@ -427,7 +439,6 @@ class UserController implements
         $view->add("user/admin/update", $data);
         $pageRender->renderPage(["title" => $title]);
     }
-
 
 
 
@@ -458,17 +469,26 @@ class UserController implements
 
         // Get user id from session
         // Get user from db
-        $user = new User();
-        $user->setDb($this->di->get("db"));
-        $user->find("id", $userId);
+        //$user = new User();
+        //$user->setDb($this->di->get("db"));
+        //$user->find("id", $userId);
+        //$this->di->get("user")->getUserFromDatabase($userId);
         // Update $user:
-        $user->email = $email;
-        $user->admin = $admin;
-        if (!empty($password)) {
-            $user->setPassword($password);
-        }
+        //$user->email = $email;
+        //$user->admin = $admin;
+        //if (!empty($password)) {
+        //    $user->setPassword($password);
+        //}
         // Save to database
-        $user->save();
+        //$user->save();
+
+        // Update user
+        $update = (object) [
+            "password" => $password,
+            "email" => $email,
+            "admin" => $admin,
+        ];
+        $this->di->get("user")->updateUserInDatabase($userId, $update);
 
         // Redirect back to admin page
         $this->di->get("response")->redirect("user/admin");
@@ -529,15 +549,26 @@ class UserController implements
         }
 
         // Get user from db
-        $user = new User();
-        $user->setDb($this->di->get("db"));
+        //$user = new User();
+        //$user->setDb($this->di->get("db"));
         // Update $user:
-        $user->email = $email;
-        $user->setPassword($password);
-        $user->acronym = $acronym;
-        $user->admin = $admin;
+        //$user->email = $email;
+        //$user->setPassword($password);
+        //$user->acronym = $acronym;
+        //$user->admin = $admin;
         // Save to database
-        $user->save();
+        //$user->save();
+
+        // Create new user
+        $newUser = (object) [
+            "acronym" => $acronym,
+            "password" => $password,
+            "email" => $email,
+            "admin" => $admin,
+        ];
+
+        $this->di->get("user")->createUser($newUser);
+
         // Redirect back to admin
         $this->di->get("response")->redirect("user/admin");
     }
@@ -560,13 +591,13 @@ class UserController implements
         $userToDelete = $this->di->get("request")->getGet("id");
 
         // Get user from db
-        $user = new User();
-        $user->setDb($this->di->get("db"));
-        $user->find("id", $userToDelete);
+        //$user = new User();
+        //$user->setDb($this->di->get("db"));
+        //$user->find("id", $userToDelete);
         // Delete user (Set Deleted to timestamp)
-        $user->deleted = date("Y-m-d H:i:s");
-        $user->save();
-        //$this->di->get("user")->deleteUser($id);
+        //$user->deleted = date("Y-m-d H:i:s");
+        //$user->save();
+        $this->di->get("user")->deleteUser($userToDelete);
 
         // Redirect back to admin
         $this->di->get("response")->redirect("user/admin");

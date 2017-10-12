@@ -32,6 +32,13 @@ class CommentControllerTest extends TestCase
 
         $this->commod = new CommentModel();
         $this->commod->setDI($this->di);
+
+        $this->post = [
+            "id" => 1,//This is the user-id.
+            "name" => "Martin",
+            "email" => "test@gmail.com",
+            "comment" => "Hello you"
+        ];
     }
 
     /**
@@ -47,16 +54,6 @@ class CommentControllerTest extends TestCase
      */
     public function testGetComment()
     {
-        //$this->commod = new CommentModel();
-        //$this->commod->setDI($this->di);
-
-        $this->post = [
-            "id" => 1,//This is the user-id.
-            "name" => "Martin",
-            "email" => "test@gmail.com",
-            "comment" => "Hello you"
-        ];
-
         $this->commod->addComment($this->post);
         $id = count($this->commod->getComments());
 
@@ -71,6 +68,8 @@ class CommentControllerTest extends TestCase
      */
     public function testUpdateComment()
     {
+        // First add comment
+        $this->commod->addComment($this->post);
         //$this->commod->addComment($this->post);
         $id = count($this->commod->getComments());
         $comment = $this->comcon->getComment($id);

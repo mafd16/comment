@@ -148,6 +148,32 @@ return [
             "callback" => function () {
                 $obj = new \Anax\Database\DatabaseQueryBuilder();
                 $obj->configure("../test/databaseTest.php");
+                $obj->connect();
+                $sql = '
+                CREATE TABLE Comments (
+                    "id" INTEGER PRIMARY KEY NOT NULL,
+                    "UserId" INTEGER,
+                    "UserName" TEXT,
+                    "UserEmail" TEXT,
+                    "comment" TEXT,
+                    "created" TIMESTAMP,
+                    "updated" DATETIME,
+                    "deleted" DATETIME
+                )';
+                $obj->execute($sql);
+                $sql = '
+                CREATE TABLE User (
+                    "id" INTEGER PRIMARY KEY NOT NULL,
+                    "acronym" TEXT UNIQUE NOT NULL,
+                    "password" TEXT,
+                    "email" TEXT,
+                    "created" TIMESTAMP,
+                    "updated" DATETIME,
+                    "deleted" DATETIME,
+                    "active" DATETIME,
+                    "admin" INTEGER
+                )';
+                $obj->execute($sql);
                 return $obj;
             }
         ],

@@ -71,29 +71,33 @@ class CommentModelTest extends TestCase
      */
     public function testUpdateComment()
     {
-        $id = count($this->commod->getComments());
+        // First, add a comment
+        $this->commod->addComment($this->post);
+        //$id = count($this->commod->getComments());
         $new = [
             "id" => 1,//This is the user-id.
             "name" => "Martin",
             "email" => "test@gmail.com",
             "comment" => "Hello sweden"
         ];
-        $this->commod->updateComment($id, $new);
-        $comment = $this->commod->getComment($id);
+        $this->commod->updateComment(1, $new);
+        $comment = $this->commod->getComment(1);
         $this->assertEquals($comment->comment, "Hello sweden");
     }
 
     /**
-     * Update a comment from a dataset.
+     * Delete a comment from a dataset.
      */
     public function testDeleteComment()
     {
-        $id = count($this->commod->getComments());
-        $comment = $this->commod->getComment($id);
+        // First, add a comment
+        $this->commod->addComment($this->post);
+        // Get the comment, and check it is NOT deleted
+        $comment = $this->commod->getComment(1);
         $this->assertNull($comment->deleted);
-
-        $this->commod->deleteComment($id);
-        $comment = $this->commod->getComment($id);
+        // Delete comment
+        $this->commod->deleteComment(1);
+        $comment = $this->commod->getComment(1);
         $this->assertNotNull($comment->deleted);
     }
 }

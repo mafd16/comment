@@ -60,7 +60,8 @@ class UserModel implements
             //$user->$updated;
             //$user->$deleted;
             //$user->$active;
-            $user->admin = 0;
+            $user->admin = isset($newUser->admin) ? $newUser->admin : 0;
+            //$user->admin = 0;
             // Save to database
             $user->save();
             return $user;
@@ -69,7 +70,7 @@ class UserModel implements
 
 
     /**
-     * Save a user to session.
+     * Save a user to session. (Should maybe be called loginUser)
      *
      * @param object $user the values of the user.
      *
@@ -116,6 +117,77 @@ class UserModel implements
         $user->setDb($this->di->get("db"));
         // Get the user
         $user->find("id", $id);
+        return $user;
+    }
+
+
+    /**
+     * Update a user in the database
+     *
+     * @param int $id the id of the user
+     * @param object $update user object with new values
+     *
+     * @return object $user the user object
+     */
+    public function updateUserInDatabase($id, $update)
+    {
+        // Connect to db
+        $user = new User();
+        $user->setDb($this->di->get("db"));
+        // Get the user
+        $user->find("id", $id);
+        // Update $user:
+        $user->email = $update->email;
+        if (isset($update->password)) {
+            $user->setPassword($update->password);
+        }
+        $user->updated = date("Y-m-d H:i:s");
+        if (isset($update->admin)) {
+            $user->admin = $update->admin;
+        }
+        // Save to database
+        $user->save();
+        return $user;
+    }
+
+
+    /**
+     * Logout user from session
+     *
+     * @return void
+     */
+    public function logoutUser()
+    {
+        // Unset session-key user
+        $this->di->get("session")->delete("my_user_id");
+        $this->di->get("session")->delete("my_user_name");
+        //$this->di->get("session")->delete("my_user_password");
+        $this->di->get("session")->delete("my_user_email");
+        //$this->di->get("session")->delete("my_user_created");
+        //$this->di->get("session")->delete("my_user_updated");
+        //$this->di->get("session")->delete("my_user_deleted");
+        //$this->di->get("session")->delete("my_user_active");
+        $this->di->get("session")->delete("my_user_admin");
+    }
+
+
+    /**
+     * Delete user
+     * (Set $user->deleted to timestamp)
+     *
+     * @param int $id the id of the user to delete
+     *
+     * @return object $user the deleted useer
+     */
+    public function deleteUser($id)
+    {
+        // Get user from db
+        $user = new User();
+        $user->setDb($this->di->get("db"));
+        $user->find("id", $id);
+        // Delete user (Set Deleted to timestamp)
+        $user->deleted = date("Y-m-d H:i:s");
+        $user->save();
         return $user;
     }
 }
