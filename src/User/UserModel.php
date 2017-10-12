@@ -106,17 +106,18 @@ class UserModel implements
     /**
      * Get a user from the database
      *
-     * @param int $id the id of the user
+     * @param string $key corresponding to a column in the table User
+     * @param mixed $value the value of the key
      *
      * @return object $user the user object
      */
-    public function getUserFromDatabase($id)
+    public function getUserFromDatabase($key, $value)
     {
         // Connect to db
         $user = new User();
         $user->setDb($this->di->get("db"));
         // Get the user
-        $user->find("id", $id);
+        $user->find($key, $value);
         return $user;
     }
 

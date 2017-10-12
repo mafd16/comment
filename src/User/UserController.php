@@ -22,10 +22,27 @@ class UserController implements
 
 
     /**
-     * @var $data description
+     * Protected variables
      */
-    //private $data;
+    protected $view;
+    protected $pageRender;
+    protected $request;
+    protected $response;
+    protected $session;
 
+
+    /**
+     * Set services to variables
+     *
+     */
+    public function setUp()
+    {
+        $this->view       = $this->di->get("view");
+        $this->pageRender = $this->di->get("pageRender");
+        $this->request    = $this->di->get("request");
+        $this->response   = $this->di->get("response");
+        $this->session    = $this->di->get("session");
+    }
 
 
     /**
@@ -40,18 +57,12 @@ class UserController implements
     public function getIndex()
     {
         $title      = "A index page";
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-
         $data = [
             "content" => "An index page",
         ];
-
-        $view->add("default2/article", $data);
-
-        $pageRender->renderPage(["title" => $title]);
+        $this->view->add("default2/article", $data);
+        $this->pageRender->renderPage(["title" => $title]);
     }
-
 
 
     /**
@@ -66,19 +77,12 @@ class UserController implements
     public function getLogin()
     {
         $title      = "A login page";
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-
         $data = [
             "message" => "",
         ];
-
-        $view->add("user/crud/login", $data);
-
-
-        $pageRender->renderPage(["title" => $title]);
+        $this->view->add("user/crud/login", $data);
+        $this->pageRender->renderPage(["title" => $title]);
     }
-
 
 
     /**
@@ -93,19 +97,12 @@ class UserController implements
     public function getCreateUser($message = null)
     {
         $title      = "A create user page";
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-
-
         $data = [
             "message" => $message,
         ];
-
-        $view->add("user/crud/create", $data);
-
-        $pageRender->renderPage(["title" => $title]);
+        $this->view->add("user/crud/create", $data);
+        $this->pageRender->renderPage(["title" => $title]);
     }
-
 
 
     /**
@@ -119,57 +116,33 @@ class UserController implements
      */
     public function postCreatingUser()
     {
-        $request    = $this->di->get("request");
-        //$session    = $this->di->get("session");
-
         // Get POST-variables
-        $acronym = $request->getPost("name");
-        $email = $request->getPost("email");
-        $password = $request->getPost("password");
-        $passwordagain = $request->getPost("passwordagain");
+        $acronym = $this->request->getPost("name");
+        $email = $this->request->getPost("email");
+        $password = $this->request->getPost("password");
+        $passwordagain = $this->request->getPost("passwordagain");
 
         if ($password !== $passwordagain) {
             $message = "<p>Passwords did not match!</p>";
             $this->getCreateUser($message);
             return;
         }
-        /*
-        // Get user from db
-        $user = new User();
-        $user->setDb($this->di->get("db"));
-        // Update $user:
-        $user->email = $email;
-        $user->setPassword($password);
-        $user->acronym = $acronym;
-        $user->admin = 0;
-        // Save to database
-        $user->save();
-        */
         $newUser = (object) [
             "acronym" => $acronym,
             "password" => $password,
             "email" => $email,
         ];
-
         $createdUser = $this->di->get("user")->createUser($newUser);
-
         if (!$createdUser) {
             $message = "<p>User " . $acronym . " already exists!</p>";
             $this->getCreateUser($message);
             return;
         }
-
         // Save user to session
-        //$session->set("my_user_id", $createdUser->id);
-        //$session->set("my_user_name", $createdUser->acronym);
-        //$session->set("my_user_email", $createdUser->email);
-        //$session->set("my_user_admin", $createdUser->admin);
         $this->di->get("user")->saveToSession($createdUser);
-
         // Redirect back to profile
-        $this->di->get("response")->redirect("user/profile");
+        $this->response->redirect("user/profile");
     }
-
 
 
     /**
@@ -184,25 +157,16 @@ class UserController implements
     public function getUserProfile()
     {
         $title      = "A profile page";
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-        $session    = $this->di->get("session");
         // Get user from db
-        /*$user = new User();
-        $user->setDb($this->di->get("db"));
-        $id = $session->get("my_user_id");
-        $user->find("id", $id);*/
-        $id = $session->get("my_user_id");
-        $user = $this->di->get("user")->getUserFromDatabase($id);
+        $id = $this->session->get("my_user_id");
+        $user = $this->di->get("user")->getUserFromDatabase("id", $id);
 
         $data = [
             "user" => $user,
         ];
-
-        $view->add("user/crud/profile", $data);
-        $pageRender->renderPage(["title" => $title]);
+        $this->view->add("user/crud/profile", $data);
+        $this->pageRender->renderPage(["title" => $title]);
     }
-
 
 
     /**
@@ -216,27 +180,19 @@ class UserController implements
      */
     public function validateUser()
     {
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-        $request    = $this->di->get("request");
-        $session    = $this->di->get("session");
-
-        // Connect to database
-        $user = new User();
-        $user->setDb($this->di->get("db"));
         // Get POST-variables
-        $acronym = $request->getPost("name");
-        $password = $request->getPost("password");
+        $acronym = $this->request->getPost("name");
+        $password = $this->request->getPost("password");
         // Get the user from DB
-        $user->find("acronym", $acronym);
+        $user = $this->di->get("user")->getUserFromDatabase("acronym", $acronym);
 
         if ($user->deleted) {
             $title = "A login page";
             $data = [
                 "message" => $user->acronym . " were deleted " . $user->deleted,
             ];
-            $view->add("user/crud/login", $data);
-            $pageRender->renderPage(["title" => $title]);
+            $this->view->add("user/crud/login", $data);
+            $this->pageRender->renderPage(["title" => $title]);
         }
 
         // Validate password against database
@@ -244,11 +200,8 @@ class UserController implements
         // if true, save user id to session and goto profile
         if ($valid) {
             // Save user id to session
-            $session->set("my_user_id", $user->id);
-            $session->set("my_user_name", $user->acronym);
-            $session->set("my_user_email", $user->email);
-            $session->set("my_user_admin", $user->admin);
-            $this->di->get("response")->redirect("user/profile");
+            $this->di->get("user")->saveToSession($user);
+            $this->response->redirect("user/profile");
         } else {
             // if false goto login
             $title = "A login page";
@@ -258,11 +211,10 @@ class UserController implements
                 "valid" => $valid,
                 "message" => "Name or password was incorrect!",
             ];
-            $view->add("user/crud/login", $data);
-            $pageRender->renderPage(["title" => $title]);
+            $this->view->add("user/crud/login", $data);
+            $this->pageRender->renderPage(["title" => $title]);
         }
     }
-
 
 
     /**
@@ -277,25 +229,16 @@ class UserController implements
     public function updateGetUserProfile($message = null)
     {
         $title      = "Update user";
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-
         // Get user from db
-        //$user = new User();
-        //$user->setDb($this->di->get("db"));
-        $id = $this->di->get("session")->get("my_user_id");
-        //$user->find("id", $id);
-        $user = $this->di->get("user")->getUserFromDatabase($id);
-
+        $id = $this->session->get("my_user_id");
+        $user = $this->di->get("user")->getUserFromDatabase("id", $id);
         $data = [
             "user" => $user,
             "message" => $message,
         ];
-
-        $view->add("user/crud/update", $data);
-        $pageRender->renderPage(["title" => $title]);
+        $this->view->add("user/crud/update", $data);
+        $this->pageRender->renderPage(["title" => $title]);
     }
-
 
 
     /**
@@ -309,49 +252,27 @@ class UserController implements
      */
     public function updatePostUserProfile()
     {
-        $request    = $this->di->get("request");
-        $session    = $this->di->get("session");
-
         // Get POST-variables
-        $email = $request->getPost("email");
-        $password = $request->getPost("password");
-        $passwordagain = $request->getPost("passwordagain");
+        $email = $this->request->getPost("email");
+        $password = $this->request->getPost("password");
+        $passwordagain = $this->request->getPost("passwordagain");
 
         if ($password !== $passwordagain) {
             $message = "<p>Passwords did not match!</p>";
             $this->updateGetUserProfile($message);
         }
-
         // Get user id from session
-        $id = $session->get("my_user_id");
-        // Get user from db
-        /*$user = new User();
-        $user->setDb($this->di->get("db"));
-        $user->find("id", $id);
-        // Update $user:
-        $user->email = $email;
-        if (!empty($password)) {
-            $user->setPassword($password);
-        }
-        // Save to database
-        $user->save();*/
+        $id = $this->session->get("my_user_id");
+        // Update user
         $update = (object) [
             "password" => $password,
             "email" => $email,
         ];
         $user = $this->di->get("user")->updateUserInDatabase($id, $update);
-
-        // Save to session
-        /*$session->set("my_user_id", $user->id);
-        $session->set("my_user_name", $user->acronym);
-        $session->set("my_user_email", $user->email);
-        $session->set("my_user_admin", $user->admin);*/
         $this->di->get("user")->saveToSession($user);
-
         // Redirect back to profile
-        $this->di->get("response")->redirect("user/profile");
+        $this->response->redirect("user/profile");
     }
-
 
 
     /**
@@ -365,16 +286,10 @@ class UserController implements
      */
     public function getLogout()
     {
-        // Unset session-key user
-        //$this->di->get("session")->delete("my_user_id");
-        //$this->di->get("session")->delete("my_user_name");
-        //$this->di->get("session")->delete("my_user_email");
-        //$this->di->get("session")->delete("my_user_admin");
         $this->di->get("user")->logoutUser();
         // Redirect back to login
-        $this->di->get("response")->redirect("user/login");
+        $this->response->redirect("user/login");
     }
-
 
 
     /**
@@ -389,22 +304,15 @@ class UserController implements
     public function getAdmin()
     {
         $title      = "An admin page";
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-
         // Get users from db
         $user = new User();
         $user->setDb($this->di->get("db"));
-
         $data = [
             "users" => $user->findAll(),
         ];
-
-        $view->add("user/admin/index", $data);
-        $pageRender->renderPage(["title" => $title]);
+        $this->view->add("user/admin/index", $data);
+        $this->pageRender->renderPage(["title" => $title]);
     }
-
-
 
 
     /**
@@ -419,27 +327,17 @@ class UserController implements
     public function getAdminUpdateUser($message = "", $userId = null)
     {
         $title      = "Admin update user";
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-
         // Get user id from GET variable
-        $userId = isset($userId) ? $userId : $this->di->get("request")->getGet("id");
+        $userId = isset($userId) ? $userId : $this->request->getGet("id");
 
-        // Get user from db
-        //$user = new User();
-        //$user->setDb($this->di->get("db"));
-        //$user->find("id", $userId);
-        $user = $this->di->get("user")->getUserFromDatabase($userId);
-
+        $user = $this->di->get("user")->getUserFromDatabase("id", $userId);
         $data = [
             "user" => $user,
             "message" => $message,
         ];
-
-        $view->add("user/admin/update", $data);
-        $pageRender->renderPage(["title" => $title]);
+        $this->view->add("user/admin/update", $data);
+        $this->pageRender->renderPage(["title" => $title]);
     }
-
 
 
     /**
@@ -453,35 +351,16 @@ class UserController implements
      */
     public function postAdminUpdateUser()
     {
-        $request    = $this->di->get("request");
-
         // Get POST-variables
-        $email = $request->getPost("email");
-        $password = $request->getPost("password");
-        $passwordagain = $request->getPost("passwordagain");
-        $admin = $request->getPost("admin");
-        $userId = $request->getPost("user_id");
-
+        $email = $this->request->getPost("email");
+        $password = $this->request->getPost("password");
+        $passwordagain = $this->request->getPost("passwordagain");
+        $admin = $this->request->getPost("admin");
+        $userId = $this->request->getPost("user_id");
         if ($password !== $passwordagain) {
             $message = "<p>Passwords did not match!</p>";
             $this->getAdminUpdateUser($message, $userId);
         }
-
-        // Get user id from session
-        // Get user from db
-        //$user = new User();
-        //$user->setDb($this->di->get("db"));
-        //$user->find("id", $userId);
-        //$this->di->get("user")->getUserFromDatabase($userId);
-        // Update $user:
-        //$user->email = $email;
-        //$user->admin = $admin;
-        //if (!empty($password)) {
-        //    $user->setPassword($password);
-        //}
-        // Save to database
-        //$user->save();
-
         // Update user
         $update = (object) [
             "password" => $password,
@@ -489,11 +368,9 @@ class UserController implements
             "admin" => $admin,
         ];
         $this->di->get("user")->updateUserInDatabase($userId, $update);
-
         // Redirect back to admin page
-        $this->di->get("response")->redirect("user/admin");
+        $this->response->redirect("user/admin");
     }
-
 
 
     /**
@@ -508,18 +385,12 @@ class UserController implements
     public function getAdminCreateUser($message = null)
     {
         $title      = "Admin create user page";
-        $view       = $this->di->get("view");
-        $pageRender = $this->di->get("pageRender");
-
         $data = [
             "message" => $message,
         ];
-
-        $view->add("user/admin/create", $data);
-
-        $pageRender->renderPage(["title" => $title]);
+        $this->view->add("user/admin/create", $data);
+        $this->pageRender->renderPage(["title" => $title]);
     }
-
 
 
     /**
@@ -533,32 +404,17 @@ class UserController implements
      */
     public function postAdminCreateUser()
     {
-        $request    = $this->di->get("request");
-
         // Get POST-variables
-        $acronym = $request->getPost("name");
-        $email = $request->getPost("email");
-        $admin = $request->getPost("admin");
-        $password = $request->getPost("password");
-        $passwordagain = $request->getPost("passwordagain");
-
+        $acronym = $this->request->getPost("name");
+        $email = $this->request->getPost("email");
+        $admin = $this->request->getPost("admin");
+        $password = $this->request->getPost("password");
+        $passwordagain = $this->request->getPost("passwordagain");
         if ($password !== $passwordagain) {
             $message = "<p>Passwords did not match!</p>";
             $this->getAdminCreateUser($message);
             return;
         }
-
-        // Get user from db
-        //$user = new User();
-        //$user->setDb($this->di->get("db"));
-        // Update $user:
-        //$user->email = $email;
-        //$user->setPassword($password);
-        //$user->acronym = $acronym;
-        //$user->admin = $admin;
-        // Save to database
-        //$user->save();
-
         // Create new user
         $newUser = (object) [
             "acronym" => $acronym,
@@ -566,14 +422,10 @@ class UserController implements
             "email" => $email,
             "admin" => $admin,
         ];
-
         $this->di->get("user")->createUser($newUser);
-
         // Redirect back to admin
-        $this->di->get("response")->redirect("user/admin");
+        $this->response->redirect("user/admin");
     }
-
-
 
 
     /**
@@ -588,18 +440,10 @@ class UserController implements
     public function getAdminDeleteUser()
     {
         // Get user to delete from GET variable
-        $userToDelete = $this->di->get("request")->getGet("id");
-
-        // Get user from db
-        //$user = new User();
-        //$user->setDb($this->di->get("db"));
-        //$user->find("id", $userToDelete);
-        // Delete user (Set Deleted to timestamp)
-        //$user->deleted = date("Y-m-d H:i:s");
-        //$user->save();
+        $userToDelete = $this->request->getGet("id");
+        // Delete user
         $this->di->get("user")->deleteUser($userToDelete);
-
         // Redirect back to admin
-        $this->di->get("response")->redirect("user/admin");
+        $this->response->redirect("user/admin");
     }
 }

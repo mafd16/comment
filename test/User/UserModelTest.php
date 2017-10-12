@@ -100,7 +100,7 @@ class UserModelTest extends TestCase
         ];
         $this->di->get("user")->createUser($newUser);
 
-        $user = $this->di->get("user")->getUserFromDatabase(1);
+        $user = $this->di->get("user")->getUserFromDatabase("id", 1);
         $this->assertEquals("charles", $user->acronym);
         $this->assertEquals("charles@darwin", $user->email);
         $this->assertNotEquals("darwin", $user->password);
@@ -179,7 +179,7 @@ class UserModelTest extends TestCase
         ];
         $this->di->get("user")->createUser($newUser);
         // Check that user is not already deleted
-        $user = $this->di->get("user")->getUserFromDatabase(1);
+        $user = $this->di->get("user")->getUserFromDatabase("id", 1);
         $this->assertNull($user->deleted);
         $this->assertEquals("knatte", $user->acronym);
         // Delete user

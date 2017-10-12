@@ -39,11 +39,11 @@ class CommentModel implements
      *
      * @return self
      */
-    public function inject($dependency)
-    {
-        $this->session = $dependency;
-        return $this;
-    }
+    //public function inject($dependency)
+    //{
+    //    $this->session = $dependency;
+    //    return $this;
+    //}
 
 
 
