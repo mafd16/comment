@@ -140,6 +140,7 @@ return [
             "callback" => function () {
                 $obj = new \Mafd16\User\UserController();
                 $obj->setDI($this);
+                $obj->setUp();
                 return $obj;
             }
         ],
